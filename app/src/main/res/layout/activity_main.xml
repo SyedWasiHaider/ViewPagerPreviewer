@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"  tools:context=".MainActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:layout_width="fill_parent"/>
+
+    <com.wasihaider.viewpagerpreviewer.ViewPagerPreviewer
+        android:layout_below="@id/pager"
+        android:id="@+id/previewer"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        custom:itemWidth="200dp"/>
+
+</LinearLayout>

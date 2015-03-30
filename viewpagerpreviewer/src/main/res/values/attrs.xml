@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="ViewPagerPreviewer">
+        <attr name="itemWidth" format="dimension" />
+        <attr name="enableOnClickEvent" format="boolean" />
+    </declare-styleable>
+</resources>
