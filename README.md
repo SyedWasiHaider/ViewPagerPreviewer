@@ -3,7 +3,7 @@ Shows a preview of offscreen fragments in a viewpager. This is highly experiment
 
 #Example
 
-~[ ](/sample.gif)
+![ ](/sample.gif)
 
 #Issues
 
