@@ -16,6 +16,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,6 +51,9 @@ public class ViewPagerPreviewer extends HorizontalScrollView {
         init(context, attrs);
     }
 
+    /* onMeasure is called many times but we only want the value
+       when the width changes.
+    */
     private int oldWidth = 0;
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -67,6 +71,8 @@ public class ViewPagerPreviewer extends HorizontalScrollView {
         this.removeAllViews();
         imageviews = null;
         linearLayout = null;
+
+        //We could set it less than this value.
         numPreviews = pager.getOffscreenPageLimit();
 
         imageviews = new ImageView[numPreviews];
@@ -78,6 +84,7 @@ public class ViewPagerPreviewer extends HorizontalScrollView {
             imageviews[i].setScaleType(ImageView.ScaleType.FIT_XY);
             imageviews[i].setLayoutParams(new ViewGroup.LayoutParams(itemWidth, ViewGroup.LayoutParams.MATCH_PARENT));
 
+            //By default
             if (enableOnClick) {
                 final int position = i;
                 imageviews[i].setClickable(true);
@@ -114,6 +121,18 @@ public class ViewPagerPreviewer extends HorizontalScrollView {
 
             }
         });
+
+        //This is basically to know when the viewpager is done drawing itself.
+        //If you try to this any earlier you will get weird null pointer or fragment not attached errors.
+        ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                drawImageViews(0,0);
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        };
+        ViewTreeObserver observer = pager.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(globalLayoutListener);
     }
 
 
@@ -154,6 +173,10 @@ public class ViewPagerPreviewer extends HorizontalScrollView {
     public void init(Context context, AttributeSet attrs){
         mContext = context;
         setHorizontalScrollBarEnabled(false);
+
+        Resources r = getResources();
+        int defaultWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, r.getDisplayMetrics());
+
         if (attrs != null){
             TypedArray a = context.getTheme().obtainStyledAttributes(
                     attrs,
@@ -161,8 +184,8 @@ public class ViewPagerPreviewer extends HorizontalScrollView {
                     0, 0);
 
             try {
-                itemWidth = a.getDimensionPixelSize(R.styleable.ViewPagerPreviewer_itemWidth, 200);
-                enableOnClick = a.getBoolean(R.styleable.ViewPagerPreviewer_enableOnClickEvent, false);
+                itemWidth = a.getDimensionPixelSize(R.styleable.ViewPagerPreviewer_itemWidth, defaultWidth);
+                enableOnClick = a.getBoolean(R.styleable.ViewPagerPreviewer_enableOnClickEvent, true);
             }catch(Exception e){
                 Log.d("ViewPagerPreviewer", "Bad attributes" + e.getMessage());
             } finally {
@@ -172,12 +195,10 @@ public class ViewPagerPreviewer extends HorizontalScrollView {
 
         }else{
 
-            Resources r = getResources();
-            itemWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, r.getDisplayMetrics());
+            itemWidth = defaultWidth;
             enableOnClick = true;
         }
 
-        enableOnClick = true;
         mListener = new PreviewItemListener() {
             @Override
             public void OnItemClicked(int position) {
