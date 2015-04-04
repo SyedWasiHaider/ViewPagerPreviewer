@@ -7,6 +7,6 @@ Shows a preview of offscreen fragments in a viewpager. This is highly experiment
 
 #Issues
 
--Initially nothing is visible.
--Increasing the number of offscreen pages will slow it down
--Many more that I haven't thought of yet.
+* Need someone to help me with this painful gradle stuff to publish to maven or jcenter.
+* Increasing the number of offscreen pages will slow it down
+* Many more that I haven't thought of yet.
