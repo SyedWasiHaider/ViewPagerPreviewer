@@ -75,10 +75,7 @@ If you want to handle the click
   previewer.setListener(new PreviewItemListener() {
             @Override
             public void OnItemClicked(int position) {
-                PagerAdapter adapter = pager.getAdapter();
-                if (1 + position + pager.getCurrentItem() < adapter.getCount()) {
-                    pager.setCurrentItem(1 + position + pager.getCurrentItem());
-                }
+              //Do your own handling.
             }
   });
 ```
