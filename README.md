@@ -85,4 +85,5 @@ If you want to handle the click
 
  - Make this a proper library so that people can use the compile statement in gradle. I really need help with this. It seems to be unnecessarily complicated.
  - Add more customization features and make it compatible with some other viewpager libaries.
- - Improve performance for high number of fragments 
+ - Improve performance for high number of fragments
+ - Port for Windows Phone
